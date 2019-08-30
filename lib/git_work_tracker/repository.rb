@@ -42,7 +42,7 @@ module GitWorkTracker
     end
 
     def unpushed_branches
-      unpushed_commits.group_by(&:branch)
+      unpushed_commits.group_by { |c| c.branch.to_s }
     end
 
     def stale_branches
