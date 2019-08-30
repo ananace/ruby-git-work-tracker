@@ -46,7 +46,14 @@ module GitWorkTracker
     end
 
     def stale_branches
-      raise NotImplementedError
+      git.branches.local.select do |branch|
+        head = branch.gcommit
+
+        authored = (head.author.email == git.config['user.email'] || head.author.name == git.config['user.name'])
+        stale = (Time.now - head.date) > 7 * 24 * 60 * 60
+
+        authored && stale
+      end
     end
 
     def latest_commit
