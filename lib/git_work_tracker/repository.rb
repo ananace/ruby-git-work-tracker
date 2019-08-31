@@ -57,7 +57,7 @@ module GitWorkTracker
     end
 
     def latest_commit
-      raise NotImplementedError
+      git.branches.map(&:gcommit).max { |a, b| a.date <=> b.date }
     end
 
     private
