@@ -4,3 +4,30 @@
 require 'git_work_tracker'
 require 'optparse'
 require 'thor'
+
+Dir["#{ENV['HOME']}/Projects/**/.git"].each_entry do |dir|
+  dir = dir.chomp '.git'
+  puts dir
+
+  repo = GitWorkTracker::Repository.new dir
+
+  unpushed = repo.unpushed_branches
+  unless unpushed.empty?
+    puts 'Unpushed branches:'
+    unpushed.each do |branch, commits|
+      puts "- #{branch}, #{commits.size} commits."
+    end
+  end
+
+  stale = repo.stale_branches
+  unless stale.empty?
+    puts 'Stale branches:'
+    stale.each do |branch|
+      puts "- #{branch}"
+    end
+  end
+
+  latest = repo.latest_commit
+
+  puts "Last commit at #{latest.date}"
+end
