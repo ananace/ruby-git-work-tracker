@@ -23,7 +23,7 @@ Dir["#{ENV['HOME']}/Projects/**/.git"].each_entry do |dir|
   unless stale.empty?
     puts 'Stale branches:'
     stale.each do |branch|
-      puts "- #{branch}"
+      puts "- #{branch} (last commit at #{branch.gcommit.date})"
     end
   end
 
