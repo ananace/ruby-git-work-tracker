@@ -60,6 +60,10 @@ module GitWorkTracker
       git.branches.map(&:gcommit).max { |a, b| a.date <=> b.date }
     end
 
+    def stale_repo?
+      stale_branches.map(&:gcommit).include? latest_commit
+    end
+
     private
 
     GIT_LOG_REX = /^(?<sha>\w+) (?:\((?<branch>.+)\) )?(?<message>.*)$/.freeze
