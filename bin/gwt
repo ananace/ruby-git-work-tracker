@@ -9,25 +9,31 @@ Dir["#{ENV['HOME']}/Projects/**/.git"].each_entry do |dir|
   dir = dir.chomp '.git'
   puts dir
 
-  repo = GitWorkTracker::Repository.new dir
+  begin
+    repo = GitWorkTracker::Repository.new dir
 
-  unpushed = repo.unpushed_branches
-  unless unpushed.empty?
-    puts 'Unpushed branches:'
-    unpushed.each do |branch, commits|
-      puts "- #{branch}, #{commits.size} commits."
+    unpushed = repo.unpushed_branches
+    stale = repo.stale_branches
+    latest = repo.latest_commit
+
+    unless unpushed.empty?
+      puts 'Unpushed branches:'
+      unpushed.each do |branch, commits|
+        puts "- #{branch}, #{commits.size} commits."
+      end
     end
+
+    unless stale.empty?
+      puts 'Stale branches:'
+      stale.each do |branch|
+        puts "- #{branch} (last commit at #{branch.gcommit.date})"
+      end
+    end
+
+    puts "Last commit at #{latest.date}"
+  rescue StandardError => e
+    puts "Error: #{e}"
   end
 
-  stale = repo.stale_branches
-  unless stale.empty?
-    puts 'Stale branches:'
-    stale.each do |branch|
-      puts "- #{branch} (last commit at #{branch.gcommit.date})"
-    end
-  end
-
-  latest = repo.latest_commit
-
-  puts "Last commit at #{latest.date}"
+  puts
 end
