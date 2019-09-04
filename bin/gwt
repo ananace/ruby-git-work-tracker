@@ -13,9 +13,6 @@ Dir["#{ENV['HOME']}/Projects/**/.git"].each_entry do |dir|
     repo = GitWorkTracker::Repository.new dir
 
     unpushed = repo.unpushed_branches
-    stale = repo.stale_branches
-    latest = repo.latest_commit
-
     unless unpushed.empty?
       puts 'Unpushed branches:'
       unpushed.each do |branch, commits|
@@ -23,6 +20,7 @@ Dir["#{ENV['HOME']}/Projects/**/.git"].each_entry do |dir|
       end
     end
 
+    stale = repo.stale_branches
     unless stale.empty?
       puts 'Stale branches:'
       stale.each do |branch|
@@ -30,6 +28,7 @@ Dir["#{ENV['HOME']}/Projects/**/.git"].each_entry do |dir|
       end
     end
 
+    latest = repo.latest_commit
     puts "Last commit at #{latest.date}"
   rescue StandardError => e
     puts "Error: #{e}"
