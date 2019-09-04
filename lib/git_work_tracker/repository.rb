@@ -17,6 +17,7 @@ module GitWorkTracker
       cur_branch = nil
       commits = git.lib.send(:command_lines, 'log', arr_opts, true).map do |line|
         matches = GIT_LOG_REX.match(line)
+        next unless matches
 
         sha = matches['sha']
         cur_branch = matches['branch'] if matches['branch']
