@@ -28,6 +28,9 @@ Dir["#{ENV['HOME']}/Projects/**/.git"].each_entry do |dir|
       end
     end
 
+    puts 'Has unstaged changes' if repo.changes?
+    puts 'Working dir is dirty.' if repo.dirty?
+
     latest = repo.latest_commit
     puts "Last commit at #{latest.date}"
   rescue StandardError => e

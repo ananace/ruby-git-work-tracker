@@ -65,12 +65,42 @@ module GitWorkTracker
       stale_branches.map(&:gcommit).include? latest_commit
     end
 
+    def staged?
+      raise NotImplementedError
+    end
+
+    def changes?
+      unstaged_changes.any?
+    end
+
+    def unstaged_changes
+      status = git_status
+
+      {
+        added: status.added,
+        deleted: status.deleted,
+        changed: status.changed
+      }.reject { |_k, v| v.empty? }
+    end
+
+    def dirty?
+      untracked_files.any?
+    end
+
+    def untracked_files
+      git_status.untracked
+    end
+
     private
 
     GIT_LOG_REX = /^(?<sha>\w+) (?:\((?<branch>.+)\) )?(?<message>.*)$/.freeze
 
     def git
       @git ||= Git.open(@basedir, log: logger)
+    end
+
+    def git_status
+      @git_status ||= git.status
     end
   end
 end
