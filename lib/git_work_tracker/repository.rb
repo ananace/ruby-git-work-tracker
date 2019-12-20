@@ -84,6 +84,10 @@ module GitWorkTracker
       }.reject { |_k, v| v.empty? }
     end
 
+    def unstaged?
+      unstaged_changes.any? { |_k, v| v.any? }
+    end
+
     def dirty?
       untracked_files.any?
     end
