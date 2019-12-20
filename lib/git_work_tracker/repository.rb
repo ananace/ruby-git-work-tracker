@@ -2,6 +2,7 @@
 
 module GitWorkTracker
   class Repository
+    STALE_DURATION = 7 * 24 * 60 * 60
 
     def initialize(basedir = nil)
       @basedir = basedir || Dir.pwd
@@ -51,7 +52,7 @@ module GitWorkTracker
         head = branch.gcommit
 
         authored = (head.author.email == git.config['user.email'] || head.author.name == git.config['user.name'])
-        stale = (Time.now - head.date) > 7 * 24 * 60 * 60
+        stale = (Time.now - head.date) > STALE_DURATION
 
         authored && stale
       end
