@@ -5,7 +5,18 @@ require 'git_work_tracker'
 require 'optparse'
 require 'thor'
 
-Dir["#{ENV['HOME']}/Projects/**/.git"].each_entry do |dir|
+projects = nil
+if ARGV.any?
+  projects = []
+  ARGV.each do |entry|
+    entry = "#{entry}/.git" unless entry.end_with? '.git'
+    projects += Dir[entry]
+  end
+else
+  projects = Dir["#{ENV['HOME']}/Projects/**/.git"]
+end
+
+projects.each_entry do |dir|
   dir = dir.chomp '.git'
   puts dir
 
